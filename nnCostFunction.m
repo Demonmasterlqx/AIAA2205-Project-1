@@ -24,7 +24,8 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 
 % Setup some useful variables
 m = size(X, 1);
-         
+% disp(m);
+
 % You need to return the following variables correctly 
 J = 0;
 Theta1_grad = zeros(size(Theta1));
@@ -62,23 +63,47 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% Part 1
+
+% add bias
+X=[ones(m,1) X];
 
 
 
+a1 = X;
+z2 = a1 * Theta1';
+a2 = sigmoid(z2);
+a2 = [ones(m,1), a2];  % 添加隐藏层偏置
+z3 = a2 * Theta2';
+a3 = sigmoid(z3);
 
+% 计算代价
+for i = 1:m
+    for k = 1:num_labels
+        is_correct = (y(i) == k);
+        J=J+(-is_correct*log(a3(i,k))+(is_correct-1)*log(1-a3(i,k)));
+    end
+end
+        
+J=J/m;
+Reg=0;
 
+% 正则化
+for i=1:25
+    for j=1:400
+        Reg=Reg+Theta1(i,j)^2;
+    end
+end
 
+for i=1:10
+    for j=1:25
+        Reg=Reg+Theta2(i,j)^2;
+    end
+end
 
+Reg=Reg*(lambda/(2*m));
 
-
-
-
-
-
-
-
-
-
+J=J+Reg;
 
 % -------------------------------------------------------------
 
