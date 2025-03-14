@@ -140,9 +140,14 @@ Delta2=delta3'*a2;
 
 Delta1=delta2'*a1;
 
-Theta1_grad=Delta1/m;
+Theta1_grad=[Delta1(:,1:1),(Delta1(:,2:end)+lambda*Theta1(:,2:end))]/m;
 
-Theta2_grad=Delta2/m;
+Theta2_grad=[Delta2(:,1:1),(Delta2(:,2:end)+lambda*Theta2(:,2:end))]/m;
+
+% disp(size(Delta2/m))
+% disp(size(Theta2_grad))
+
+% Theta2_grad=Delta2/m;
 
 % disp(size(Theta1_grad));
 % disp(size(Theta2_grad));
