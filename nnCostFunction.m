@@ -90,20 +90,101 @@ Reg=0;
 
 % 正则化
 for i=1:25
-    for j=1:400
+    for j=2:401
         Reg=Reg+Theta1(i,j)^2;
     end
 end
 
 for i=1:10
-    for j=1:25
+    for j=2:26
         Reg=Reg+Theta2(i,j)^2;
     end
 end
 
+disp(size(Theta1))
+disp(size(Theta2))
+
+disp(Reg)
+disp(lambda/(2*m))
+disp(J)
+
 Reg=Reg*(lambda/(2*m));
 
+
+
 J=J+Reg;
+
+% Part 2
+
+% deltaJ_deltahx=zeros(m,num_labels);
+
+% for i=1:m
+%     for k=1:num_labels
+%         is_correct = (y(i) == k);
+%         deltaJ_deltahx(i,k)=-is_correct*1/a3(i,k)+(1-is_correct)*1/(1-a3(i,k));
+%     end
+% end
+
+% deltahx_deltaz3=sigmoidGradient(z3);
+
+% deltaz3_deltathita2=a2;
+
+% deltaz3_deltaa2=Theta2;
+
+% deltaa2_deltaz2=sigmoidGradient(z2);
+
+% deltaz2_deltaa1=X;
+
+% deltaz2_deltathita1=Theta1;
+
+
+% disp(size(deltaJ_deltahx))
+% disp(size(deltahx_deltaz3))
+% disp(size(deltaz3_deltaa2))
+% disp(size(deltaa2_deltaz2))
+% disp(size(deltaz2_deltathita1))
+
+% Theta1_grad=deltaJ_deltahx*deltahx_deltaz3*deltaz3_deltaa2*deltaa2_deltaz2*deltaz2_deltathita1;
+
+% Theta2_grad=deltaJ_deltahx*deltahx_deltaz3*deltaz3_deltathita2;
+
+% numgrad=computeNumericalGradient(J, Theta1);
+
+% disp(numgrad);
+% disp(Theta1_grad);
+% disp(Theta2_grad);
+
+delta3=a3;
+
+for i=1:m
+    for k=1:num_labels
+        is_correct = (y(i) == k);
+        delta3(i,k)=delta3(i,k)-is_correct;
+    end
+end
+
+delta2=delta3*Theta2.*(sigmoidGradient(a2));
+
+
+Delta2=delta3'*a2;
+
+disp(size(delta2(:,2:end)));
+disp(size(Theta1));
+disp(size(a1))
+
+
+delta1=delta2(:,2:end)*Theta1.*(sigmoidGradient(a1));
+
+Delta1=delta1'*a1;
+
+Theta1_grad=Delta1/m;
+
+Theta2_grad=Delta2/m;
+
+disp(size(Theta1_grad));
+disp(size(Theta2_grad));
+disp(size(Theta1));
+disp(size(Theta2));
 
 % -------------------------------------------------------------
 
@@ -112,5 +193,6 @@ J=J+Reg;
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
+% disp(grad);
 
 end
