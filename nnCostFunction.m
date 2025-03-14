@@ -69,7 +69,6 @@ Theta2_grad = zeros(size(Theta2));
 X=[ones(m,1) X];
 
 
-
 a1 = X;
 z2 = a1 * Theta1';
 a2 = sigmoid(z2);
@@ -88,74 +87,36 @@ end
 J=J/m;
 Reg=0;
 
+[Theta1_r,Theta1_c]=size(Theta1);
+
 % 正则化
-for i=1:25
-    for j=2:401
+for i=1:Theta1_r
+    for j=2:Theta1_c
         Reg=Reg+Theta1(i,j)^2;
     end
 end
 
-for i=1:10
-    for j=2:26
+[Theta2_r,Theta2_c]=size(Theta2);
+
+for i=1:Theta2_r
+    for j=2:Theta2_c
         Reg=Reg+Theta2(i,j)^2;
     end
 end
 
-disp(size(Theta1))
-disp(size(Theta2))
-
-disp(Reg)
-disp(lambda/(2*m))
-disp(J)
-
 Reg=Reg*(lambda/(2*m));
-
-
-
 J=J+Reg;
 
 % Part 2
 
-% deltaJ_deltahx=zeros(m,num_labels);
+Theta2_no_bias=Theta2(:,2:end);
 
-% for i=1:m
-%     for k=1:num_labels
-%         is_correct = (y(i) == k);
-%         deltaJ_deltahx(i,k)=-is_correct*1/a3(i,k)+(1-is_correct)*1/(1-a3(i,k));
-%     end
-% end
-
-% deltahx_deltaz3=sigmoidGradient(z3);
-
-% deltaz3_deltathita2=a2;
-
-% deltaz3_deltaa2=Theta2;
-
-% deltaa2_deltaz2=sigmoidGradient(z2);
-
-% deltaz2_deltaa1=X;
-
-% deltaz2_deltathita1=Theta1;
-
-
-% disp(size(deltaJ_deltahx))
-% disp(size(deltahx_deltaz3))
-% disp(size(deltaz3_deltaa2))
-% disp(size(deltaa2_deltaz2))
-% disp(size(deltaz2_deltathita1))
-
-% Theta1_grad=deltaJ_deltahx*deltahx_deltaz3*deltaz3_deltaa2*deltaa2_deltaz2*deltaz2_deltathita1;
-
-% Theta2_grad=deltaJ_deltahx*deltahx_deltaz3*deltaz3_deltathita2;
-
-% numgrad=computeNumericalGradient(J, Theta1);
-
-% disp(numgrad);
-% disp(Theta1_grad);
-% disp(Theta2_grad);
 
 delta3=a3;
 
+% disp("delta3")
+% disp(size(delta3))
+% disp(m)
 for i=1:m
     for k=1:num_labels
         is_correct = (y(i) == k);
@@ -163,28 +124,30 @@ for i=1:m
     end
 end
 
-delta2=delta3*Theta2.*(sigmoidGradient(a2));
+% disp(size(delta3))
+% disp(size(Theta2_no_bias))
+% disp(size(z2))
+
+delta2=delta3*Theta2_no_bias .* (sigmoidGradient(z2));
 
 
 Delta2=delta3'*a2;
 
-disp(size(delta2(:,2:end)));
-disp(size(Theta1));
-disp(size(a1))
+% disp(size(delta2));
+% disp(size(Theta1_no_bias));
+% disp(size(a1))
 
 
-delta1=delta2(:,2:end)*Theta1.*(sigmoidGradient(a1));
-
-Delta1=delta1'*a1;
+Delta1=delta2'*a1;
 
 Theta1_grad=Delta1/m;
 
 Theta2_grad=Delta2/m;
 
-disp(size(Theta1_grad));
-disp(size(Theta2_grad));
-disp(size(Theta1));
-disp(size(Theta2));
+% disp(size(Theta1_grad));
+% disp(size(Theta2_grad));
+% disp(size(Theta1));
+% disp(size(Theta2));
 
 % -------------------------------------------------------------
 
@@ -192,6 +155,9 @@ disp(size(Theta2));
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
+
+% disp(grad)
+% disp(size(grad))
 
 % disp(grad);
 
